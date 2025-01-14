@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROMEK-XD-V2 PAIR CODE</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-image: url("https://files.catbox.moe/8utkyo.jpg");
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: cover;
+      font-family: 'Poppins', Arial, sans-serif;
+      color: #ffffff;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .box {
+      width: 350px;
+      padding: 30px;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(10px);
+      border-radius: 10px;
+      box-shadow: 0 8px 15px rgba(0, 255, 255, 0.3);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .box:hover {
+      transform: scale(1.02);
+      box-shadow: 0 12px 25px rgba(0, 255, 255, 0.5);
+    }
+
+    #text h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      color: #00ffff;
+      text-shadow: 0 0 10px #00ffff, 0 0 20px #00ffff;
+    }
+
+    #text h6 {
+      font-size: 0.9rem;
+      font-weight: 300;
+      margin-bottom: 20px;
+      color: #ff00ff;
+      text-shadow: 0 0 10px #ff00ff, 0 0 20px #ff00ff;
+    }
+
+    .input-container {
+      display: flex;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 1rem;
+      overflow: hidden;
+      width: 100%;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+    }
+
+    .input-container input {
+      flex: 1;
+      padding: 0.8rem 1rem;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #fff;
+      font-size: 1rem;
+    }
+
+    .input-container input::placeholder {
+      color: #ccc;
+    }
+
+    .input-container button {
+      padding: 0.8rem 1rem;
+      border: none;
+      background: linear-gradient(45deg, #ff00ff, #00ffff);
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff;
+    }
+
+    .input-container button:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 20px #00ffff, 0 0 40px #ff00ff;
+    }
+
+    #pair a {
+      display: block;
+      margin-top: 20px;
+      font-size: 1rem;
+      font-weight: bold;
+      color: #ff6b6b;
+      text-shadow: 0 0 10px #ff6b6b;
+      text-decoration: none;
+    }
+
+    #pair a:hover {
+      color: #ff3d3d;
+      text-decoration: underline;
+    }
+
+    @media (max-width: 500px) {
+      .box {
+        width: 90%;
+        padding: 20px;
+      }
+
+      #text h3 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="main">
+      <div class="box" id="box">
+        <div id="text">
+          <i class="fa fa-user" style="font-size: 2rem; color: #00ffff; text-shadow: 0 0 10px #00ffff;"></i>
+          <h3>Link with Phone Number</h3>
+          <h6>Enter your number with country code</h6>
+          <div class="input-container">
+            <input type="number" id="number" placeholder="+91934137xxx">
+            <button id="submit">Enter</button>
+          </div>
+          <main id="pair"></main>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.0.0-alpha.1/axios.min.js"></script>
+  <script>
+    const a = document.getElementById("pair");
+    const b = document.getElementById("submit");
+    const c = document.getElementById("number");
+
+    b.addEventListener("click", async (e) => {
+      e.preventDefault();
+      a.innerHTML = "";
+      if (!c.value) {
+        a.innerHTML = '<a style="color:#ff6b6b;font-weight:bold">❗ Please enter your WhatsApp number with country code.</a>';
+      } else if (c.value.replace(/[^0-9]/g, "").length < 11) {
+        a.innerHTML = '<a style="color:#ff6b6b;font-weight:bold">❌ Invalid number format. Please try again. ❌</a>';
+      } else {
+        const bc = c.value.replace(/[^0-9]/g, "");
+        c.type = "text";
+        c.value = "+" + bc;
+        a.innerHTML = '<a style="color:#00ffff;font-weight:bold">Please wait...</a>';
+        try {
+          const { data } = await axios(`/code?number=${bc}`);
+          const code = data.code || "Service Unavailable";
+          a.innerHTML = `
+            <a style="color:#00ffff;font-weight:bold; font-size: 1.2rem;">CODE: ${code}</a>
+          `;
+        } catch (error) {
+          a.innerHTML = '<a style="color:#ff6b6b;font-weight:bold">❌ Error retrieving code. Please try again later. ❌</a>';
+        }
+      }
+    });
+  </script>
+</body>
+</html>
